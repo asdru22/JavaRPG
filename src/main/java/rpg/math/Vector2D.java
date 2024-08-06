@@ -1,4 +1,4 @@
-package RPG.Math;
+package rpg.math;
 
 public class Vector2D {
     public int x;
