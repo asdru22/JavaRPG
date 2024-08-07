@@ -1,16 +1,21 @@
 package rpg.game;
 
 import rpg.objects.Base;
+import rpg.objects.Entity;
+import rpg.objects.Grid;
 import rpg.objects.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private List<Base> objects = new ArrayList<>();
+    private List<Entity> entities = new ArrayList<>();
+    private Grid grid;
 
     public Game(){
-        objects.add(new Player(100,100,4));
+        entities.add(new Player(100,100,4));
+        grid = new Grid();
+
     }
 
 
@@ -21,13 +26,16 @@ public class Game {
     }
 
     public void update(){
-        for(Base b : objects){
-            b.update();
+        for(Entity e : entities){
+            e.update();
         }
     }
 
-    public List<Base> getObjects(){
-        return objects;
+    public List<Entity> getEntities(){
+        return entities;
+    }
+    public Grid getGrid(){
+        return grid;
     }
 
 }

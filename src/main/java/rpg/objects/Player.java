@@ -7,7 +7,7 @@ import rpg.math.Vector2D;
 public class Player extends Entity{
     public Player(int x, int y,int speed){
         super(new Vector2D(x,y), GamePanel.instance.getTileSize(),
-                GamePanel.instance.getTileSize(), "textures/player.png",speed);
+                GamePanel.instance.getTileSize(), "player.png",speed);
     }
 
     @Override

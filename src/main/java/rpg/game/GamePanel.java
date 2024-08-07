@@ -2,6 +2,7 @@ package rpg.game;
 
 import rpg.input.KeyHandler;
 import rpg.objects.Base;
+import rpg.objects.Entity;
 
 import javax.swing.JPanel;
 import java.awt.*;
@@ -20,11 +21,6 @@ public class GamePanel extends JPanel implements Runnable {
     private Thread gameThread;
     private KeyHandler keyHandler = new KeyHandler();
     private Game game;
-
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
-
     public static GamePanel instance;
 
     public GamePanel() {
@@ -76,12 +72,16 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        for (Base b : game.getObjects()) {
-            b.draw(g2);
+
+        // draw tiles
+        game.getGrid().draw(g2);
+
+        // draw entities
+        for (Entity e : game.getEntities()) {
+            e.draw(g2);
 
         }
         g2.dispose();
-
     }
 
 

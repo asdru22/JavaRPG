@@ -17,6 +17,7 @@ public abstract class Base {
         this.position = pos;
         this.width = width;
         this.height = height;
+        System.out.println(texture);
         this.setTexture(texture);
     }
 
@@ -28,7 +29,7 @@ public abstract class Base {
 
     public void setTexture(String texturePath) {
         try {
-            texture = ImageIO.read(Objects.requireNonNull(this.getClass().getResource("/textures/player.png")));
+            texture = ImageIO.read(Objects.requireNonNull(this.getClass().getResource("/textures/"+texturePath)));
         } catch (IOException e) {
             System.err.println("Image " + texturePath + " doesn't exist");
             throw new RuntimeException(e);
