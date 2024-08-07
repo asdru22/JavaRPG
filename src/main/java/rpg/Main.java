@@ -1,10 +1,16 @@
 package rpg;
 
-import rpg.math.Vector2D;
-import rpg.objects.Entity;
+import rpg.game.GamePanel;
+import rpg.game.GameWindow;
+
+import javax.swing.*;
 
 public class Main {
+    private static final boolean RESIZABLE = false;
+    private static final String TITLE = "2D Adventure";
+
     public static void main(String[] args) {
-        Entity o = new Entity(new Vector2D(1,1),1,1,"pa");
+        GameWindow window = new GameWindow();
+
     }
 }
