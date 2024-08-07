@@ -2,8 +2,12 @@ package rpg.objects;
 
 import rpg.math.Vector2D;
 
-public class Entity extends Base {
-    public Entity(Vector2D pos, int width, int height, String texture){
+public abstract class Entity extends Base {
+    protected int speed;
+
+    public Entity(Vector2D pos, int width, int height, String texture, int speed) {
+
         super(pos, width, height, texture);
+        this.speed = speed;
     }
 }

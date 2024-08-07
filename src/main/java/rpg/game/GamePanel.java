@@ -1,5 +1,8 @@
 package rpg.game;
 
+import rpg.input.KeyHandler;
+import rpg.objects.Base;
+
 import javax.swing.JPanel;
 import java.awt.*;
 
@@ -10,36 +13,83 @@ public class GamePanel extends JPanel implements Runnable {
     private final int TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE;
     private final int COLUMNS = 16;
     private final int ROWS = 12;
-    private final int WIDTH = TILE_SIZE*COLUMNS;
-    private final int HEIGHT = TILE_SIZE*ROWS;
+    private final int WIDTH = TILE_SIZE * COLUMNS;
+    private final int HEIGHT = TILE_SIZE * ROWS;
+    private final int FPS = 60;
+
     private Thread gameThread;
+    private KeyHandler keyHandler = new KeyHandler();
+    private Game game;
+
+    int playerX = 100;
+    int playerY = 100;
+    int playerSpeed = 4;
 
     public static GamePanel instance;
 
-    public GamePanel(){
-        this.setPreferredSize(new Dimension(WIDTH,HEIGHT));
+    public GamePanel() {
+        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        this.setFocusable(true);
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
+        this.addKeyListener(keyHandler);
 
         gameThread = new Thread(this);
-        gameThread.start();
         instance = this;
+
+        game = new Game();
+        gameThread.start();
+
     }
 
     @Override
     public void run() {
-        Game g = new Game();
+        Thread gameThread = GamePanel.instance.getThread();
+
+        double drawInterval = 10e8 / FPS;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+        long timer = 0;
+        int drawCount = 0;
+
+        while (gameThread != null) {
+            currentTime = System.nanoTime();
+            delta += (currentTime - lastTime) / drawInterval;
+            timer += (currentTime - lastTime);
+            lastTime = currentTime;
+
+            if (delta >= 1) {
+                game.mainLoop();
+                delta--;
+                drawCount++;
+            }
+
+            if (timer >= 10e8) {
+                System.out.printf("FPS: %d%n", drawCount);
+                drawCount = 0;
+                timer = 0;
+            }
+        }
     }
 
-    public void paintComponent(Graphics g){
-        super.paint(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        for (Base b : game.getObjects()) {
+            b.draw(g2);
 
-        g2.setColor(Color.white);
-        g2.fillRect(100,100, instance.TILE_SIZE, instance.TILE_SIZE);
+        }
+        g2.dispose();
+
     }
 
-    public Thread getThread(){
+
+    public Thread getThread() {
         return gameThread;
+    }
+
+    public int getTileSize() {
+        return TILE_SIZE;
     }
 }

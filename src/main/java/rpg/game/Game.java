@@ -1,38 +1,33 @@
 package rpg.game;
 
-import java.awt.*;
+import rpg.objects.Base;
+import rpg.objects.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
-    private final int FPS = 60;
+    private List<Base> objects = new ArrayList<>();
+
     public Game(){
-        this.mainLoop();
+        objects.add(new Player(100,100,4));
     }
-    private void mainLoop(){
-        Thread gameThread = GamePanel.instance.getThread();
 
-        double drawInterval = 10e9/FPS;
-        double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
 
-        while(gameThread!=null){
-            currentTime = System.nanoTime();
-            delta += (currentTime-lastTime)/drawInterval;
-            lastTime = currentTime;
+    public void mainLoop(){
+        update();
 
-            if(delta>=1){
-                update();
+        GamePanel.instance.repaint();
+    }
 
-                GamePanel.instance.repaint();
-            }
-
+    public void update(){
+        for(Base b : objects){
+            b.update();
         }
     }
 
-    private void update(){
+    public List<Base> getObjects(){
+        return objects;
+    }
 
-    }
-    private void paint(Graphics g){
-        GamePanel.instance.paint(g);
-    }
 }
