@@ -5,10 +5,10 @@ import rpg.math.Vector2D;
 import java.util.ArrayList;
 
 public class Tile extends Base {
-    TileType tileType;
-    ArrayList<Tile> adjacentTiles = new ArrayList<>();
-    public Tile(Vector2D pos, int width, int height,TileType tileType){
-        super(pos, width, height, "tile/"+tileType.getTexture());
+    private TileType tileType;
+    private ArrayList<Tile> adjacentTiles = new ArrayList<>();
+    public Tile(Vector2D pos,TileType tileType){
+        super(pos, "tile/"+tileType.getTexture());
         this.tileType = tileType;
     }
 

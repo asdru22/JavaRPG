@@ -1,7 +1,6 @@
 package rpg.game;
 
 import rpg.input.KeyHandler;
-import rpg.objects.Base;
 import rpg.objects.Entity;
 
 import javax.swing.JPanel;
@@ -91,5 +90,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     public int getTileSize() {
         return TILE_SIZE;
+    }
+
+    public int getScreenWidth() {
+        return WIDTH;
+    }
+
+    public int getScreenHeight() {
+        return HEIGHT;
     }
 }

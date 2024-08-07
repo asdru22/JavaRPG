@@ -9,9 +9,6 @@ import java.util.ArrayList;
 
 
 public class Grid {
-    private final int WIDTH = 10;
-    private final int HEIGHT = 30;
-
     private Tile[][] tiles;
 
     public Grid() {
@@ -30,10 +27,8 @@ public class Grid {
     public void makeFromFile(String fileName) {
         tiles = null;
         String resourcePath = "/maps/" + fileName;
-        System.out.println(resourcePath);
 
         int tileWidth = GamePanel.instance.getTileSize(); // Example tile width
-        int tileHeight = GamePanel.instance.getTileSize();
 
         try (InputStream is = getClass().getResourceAsStream(resourcePath);
              BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
@@ -55,7 +50,7 @@ public class Grid {
                     for (int x = 0; x < tokens.length(); x++) {
                         int tileValue = Integer.parseInt(String.valueOf(tokens.charAt(x)));
                         TileType tileType = TileType.fromInt(tileValue);
-                        Tile tile = new Tile(new Vector2D(x * tileWidth, y * tileHeight), tileWidth, tileHeight, tileType);
+                        Tile tile = new Tile(new Vector2D(x * tileWidth, y * tileWidth), tileType);
                         tiles[y][x] = tile;
                     }
                 }

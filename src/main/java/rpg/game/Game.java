@@ -13,7 +13,7 @@ public class Game {
     private Grid grid;
 
     public Game(){
-        entities.add(new Player(100,100,4));
+        entities.add(new Player(0,0,4));
         grid = new Grid();
 
     }
