@@ -1,5 +1,7 @@
 package rpg.objects;
 
+import rpg.game.Game;
+import rpg.game.GamePanel;
 import rpg.math.Vector2D;
 
 import javax.imageio.ImageIO;
@@ -9,17 +11,30 @@ import java.io.IOException;
 import java.util.Objects;
 
 public abstract class Base {
-    Vector2D position;
+    public Vector2D position;
     protected int width, height;
-    private BufferedImage texture;
+    protected BufferedImage texture;
 
     public Base(Vector2D pos, String texture) {
         this.position = pos;
         this.setTexture(texture);
     }
 
-    public void draw(Graphics2D g2) {
-        g2.drawImage(texture, position.x, position.y, width*2, height*2, null);
+    public void draw(Graphics2D g2)
+    {
+        int cameraX = Player.instance.position.x + position.x;
+        int cameraY = Player.instance.position.y + position.y;
+
+        int screenWidth = GamePanel.instance.getScreenWidth();
+        int screenHeight = GamePanel.instance.getScreenHeight();
+        int tileSize = GamePanel.instance.getTileSize();
+
+        if(cameraX<-tileSize) return;
+        if(cameraY<-tileSize) return;
+        if(cameraX>screenWidth+tileSize) return;
+        if(cameraY>screenHeight+tileSize) return;
+
+        g2.drawImage(texture, cameraX, cameraY, width*2, height*2, null);
     }
 
     public abstract void update();

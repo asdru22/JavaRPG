@@ -1,6 +1,5 @@
 package rpg.game;
 
-import rpg.objects.Base;
 import rpg.objects.Entity;
 import rpg.objects.Grid;
 import rpg.objects.Player;
@@ -21,7 +20,6 @@ public class Game {
 
     public void mainLoop(){
         update();
-
         GamePanel.instance.repaint();
     }
 

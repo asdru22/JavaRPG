@@ -2,6 +2,7 @@ package rpg.game;
 
 import rpg.input.KeyHandler;
 import rpg.objects.Entity;
+import rpg.objects.TileType;
 
 import javax.swing.JPanel;
 import java.awt.*;
@@ -16,10 +17,13 @@ public class GamePanel extends JPanel implements Runnable {
     private final int WIDTH = TILE_SIZE * COLUMNS;
     private final int HEIGHT = TILE_SIZE * ROWS;
     private final int FPS = 60;
-
     private Thread gameThread;
     private KeyHandler keyHandler = new KeyHandler();
     private Game game;
+    public final int MAX_WORLD_COL = 50;
+    public final int MAX_WORLD_ROW = 50;
+    public final int WORLD_WIDTH = TILE_SIZE*MAX_WORLD_COL;
+    public final int WORLD_HEIGHT = TILE_SIZE*MAX_WORLD_ROW;
     public static GamePanel instance;
 
     public GamePanel() {
