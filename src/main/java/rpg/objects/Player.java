@@ -1,45 +1,62 @@
 package rpg.objects;
 
-import rpg.game.GamePanel;
-import rpg.input.KeyHandler;
-import rpg.math.Vector2D;
+import rpg.input.Keyboard;
+import rpg.utils.Textures;
 
-import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Player extends Entity {
-    private final Vector2D CAMERA_POS;
+    private int speed = 4;
 
-    public static Player instance;
+    public Player(int x, int y) {
+        super(x, y, 64, 40);
+        this.loadAnimations();
+    }
 
-    public Player(int x, int y, int speed) {
-        super(new Vector2D(x, y), "player.png", speed);
-        GamePanel gp = GamePanel.instance;
-        CAMERA_POS = new Vector2D(gp.getScreenWidth() / 2 - gp.getTileSize() / 2,
-                gp.getScreenHeight() / 2 - gp.getTileSize() / 2);
+    @Override
+    public void loadAnimations() {
+        BufferedImage sprites = Textures.getImage("player.png");
 
-        instance = this;
+        animations.add(State.IDLE, Animation.loadAnimation(sprites, 5, width, height, 0));
+        animations.add(State.RUNNING, Animation.loadAnimation(sprites, 6, width, height, 1));
+        animations.add(State.JUMPING, Animation.loadAnimation(sprites, 3, width, height, 2));
+        animations.add(State.FALLING, Animation.loadAnimation(sprites, 1, width, height, 3));
+        animations.add(State.LANDING, Animation.loadAnimation(sprites, 2, width, height, 4));
+        animations.add(State.HURT, Animation.loadAnimation(sprites, 4, width, height, 5));
+        animations.add(State.ATTACKING, Animation.loadAnimation(sprites, 3, width, height, 6));
+        animations.add(State.ATTACKING2, Animation.loadAnimation(sprites, 3, width, height, 7));
+        animations.add(State.ATTACKING3, Animation.loadAnimation(sprites, 3, width, height, 8));
+
+        texture = animations.get(State.IDLE)[0];
     }
 
     @Override
     public void update() {
-        if (KeyHandler.isUp) {
-            position.y += speed;
+        Keyboard k = Keyboard.instance;
+        if (!k.any()) {
+            state = State.IDLE;
+            return;
         }
-        if (KeyHandler.isDown) {
-            position.y -= speed;
+
+        if(state == State.IDLE){
+            state = State.RUNNING;
         }
-        if (KeyHandler.isLeft) {
-            position.x += speed;
+
+        if (k.up) {
+            direction = Direction.UP;
+            y -= speed;
         }
-        if (KeyHandler.isRight) {
-            position.x -= speed;
+        if (k.down) {
+            direction = Direction.DOWN;
+            y += speed;
+        }
+        if (k.left) {
+            direction = Direction.LEFT;
+            x -= speed;
+        }
+        if (k.right) {
+            direction = Direction.RIGHT;
+            x += speed;
         }
     }
-
-    @Override
-    public void draw(Graphics2D g2) {
-        g2.drawImage(texture, CAMERA_POS.x, CAMERA_POS.y, width * 2, height * 2, null);
-    }
-
-
 }
