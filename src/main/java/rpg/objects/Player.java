@@ -1,9 +1,10 @@
 package rpg.objects;
 
+import rpg.game.Game;
 import rpg.input.Keyboard;
+import rpg.utils.Collision;
 
 import java.awt.event.MouseEvent;
-import java.util.Objects;
 
 public class Player extends Entity {
     private int speed = 4;
@@ -13,6 +14,7 @@ public class Player extends Entity {
     public Player(int x, int y) {
         super(x, y, 64, 40, "player.png");
         instance = this;
+        this.initHitbox(21,4,20,28);
     }
 
     @Override
@@ -23,43 +25,51 @@ public class Player extends Entity {
         animationHandler.add("FALLING", 10, 1, 3);
         animationHandler.add("LANDING", 10, 2, 4);
         animationHandler.add("HURT", 10, 4, 5);
-        animationHandler.add("ATTACKING", 10, 3, 6,false);
+        animationHandler.add("ATTACKING", 10, 3, 6, false);
         animationHandler.add("ATTACKING2", 10, 3, 7);
         animationHandler.add("ATTACKING3", 10, 3, 8);
     }
 
     @Override
     public void update() {
+        updatePosition();
+    }
+
+    private void updatePosition() {
         Keyboard k = Keyboard.instance;
         if (!k.any()) {
             changeMovementState("IDLE");
             return;
         }
 
-        if(Objects.equals(movementState, "IDLE")){
-            changeMovementState("RUNNING");
-        }
+        int xSpeed = 0, ySpeed = 0;
 
         if (k.up) {
             direction = Direction.UP;
-            y -= speed;
+            ySpeed = -speed;
         }
         if (k.down) {
             direction = Direction.DOWN;
-            y += speed;
+            ySpeed = speed;
         }
         if (k.left) {
             direction = Direction.LEFT;
-            x -= speed;
+            xSpeed = -speed;
         }
         if (k.right) {
             direction = Direction.RIGHT;
-            x += speed;
+            xSpeed = speed;
+        }
+
+        if (Collision.canMoveHere(hitbox.x+xSpeed,hitbox.y+ySpeed,hitbox.width,hitbox.height,lvlData)){
+            hitbox.x += xSpeed;
+            hitbox.y += ySpeed;
+            changeMovementState("RUNNING");
         }
     }
 
-    public void mouseInput(MouseEvent e){
-        if(e.getButton()==MouseEvent.BUTTON1){
+    public void mouseInput(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
             changeEventState("ATTACKING");
         }
     }
