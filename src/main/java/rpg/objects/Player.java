@@ -1,9 +1,6 @@
 package rpg.objects;
 
 import rpg.input.Keyboard;
-import rpg.utils.Textures;
-
-import java.awt.image.BufferedImage;
 
 public class Player extends Entity {
     private int speed = 4;
@@ -15,19 +12,18 @@ public class Player extends Entity {
 
     @Override
     public void loadAnimations() {
-        BufferedImage sprites = Textures.getImage("player.png");
 
-        animations.add(State.IDLE, Animation.loadAnimation(sprites, 5, width, height, 0));
-        animations.add(State.RUNNING, Animation.loadAnimation(sprites, 6, width, height, 1));
-        animations.add(State.JUMPING, Animation.loadAnimation(sprites, 3, width, height, 2));
-        animations.add(State.FALLING, Animation.loadAnimation(sprites, 1, width, height, 3));
-        animations.add(State.LANDING, Animation.loadAnimation(sprites, 2, width, height, 4));
-        animations.add(State.HURT, Animation.loadAnimation(sprites, 4, width, height, 5));
-        animations.add(State.ATTACKING, Animation.loadAnimation(sprites, 3, width, height, 6));
-        animations.add(State.ATTACKING2, Animation.loadAnimation(sprites, 3, width, height, 7));
-        animations.add(State.ATTACKING3, Animation.loadAnimation(sprites, 3, width, height, 8));
+        animationHandler.add(State.IDLE,10,5,0);
+        animationHandler.add(State.RUNNING,10,6,1);
+        animationHandler.add(State.JUMPING,10,3,2);
+        animationHandler.add(State.FALLING,10,1,3);
+        animationHandler.add(State.LANDING,10,2,4);
+        animationHandler.add(State.HURT,10,4,5);
+        animationHandler.add(State.ATTACKING,10,3,6);
+        animationHandler.add(State.ATTACKING2,10,3,7);
+        animationHandler.add(State.ATTACKING3,10,3,8);
 
-        texture = animations.get(State.IDLE)[0];
+        texture = animationHandler.getDefault();
     }
 
     @Override

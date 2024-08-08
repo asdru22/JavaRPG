@@ -3,14 +3,14 @@ package rpg.objects;
 import java.awt.*;
 
 public class Entity extends Drawable {
-    protected Animation animations;
+    protected AnimationHandler animationHandler;
     protected Direction direction = Direction.RIGHT;
     protected State state = State.IDLE;
     private State previous = state;
 
     public Entity(int x, int y, int width, int height) {
         super(x, y, width, height);
-        animations = new Animation(this,10);
+        animationHandler = new AnimationHandler(this,"player.png");
     }
 
     public void loadAnimations() {
@@ -19,14 +19,14 @@ public class Entity extends Drawable {
     @Override
     public void draw(Graphics g) {
         if(state!=previous) changedState();
-        animations.tick();
+        animationHandler.tick();
         g.drawImage(texture, x, y, width * SCALE, height * SCALE, null);
     }
     public void update(){}
 
     private void changedState(){
         previous = state;
-        animations.reset();
+        animationHandler.reset();
     }
 
 }
