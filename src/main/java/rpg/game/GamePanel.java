@@ -12,7 +12,7 @@ import java.awt.*;
 public class GamePanel extends JPanel {
     private Mouse mouseInputs = new Mouse();
     private LevelManager levelManager = new LevelManager();
-    private Player p = new Player(100, 100);
+    private Player p = new Player( 128, 128);
 
 
     public GamePanel() {

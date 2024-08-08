@@ -46,7 +46,7 @@ public class Game implements Runnable {
 
             if (timer >= 10e8) {
                 FPS = frames;
-                gameWindow.setTitle(String.format("2D Game (%d FPS), Res:(%dx%d)", FPS, Game.GAME_WIDTH, Game.GAME_HEIGHT));
+                gameWindow.setTitle(String.format("2D Game (%d FPS), [%dx%d]", FPS, Game.GAME_WIDTH, Game.GAME_HEIGHT));
                 frames = 0;
                 timer = 0;
             }

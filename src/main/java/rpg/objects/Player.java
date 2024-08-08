@@ -7,14 +7,15 @@ import rpg.utils.Collision;
 import java.awt.event.MouseEvent;
 
 public class Player extends Entity {
-    private int speed = 4;
+    private int speed = 2;
 
     public static Player instance;
 
     public Player(int x, int y) {
-        super(x, y, 64, 40, "player.png");
+        super((int) (x * Game.SCALE), (int) (y * Game.SCALE), 64, 40, "player.png");
+
         instance = this;
-        this.initHitbox(21,4,20,28);
+        this.initHitbox(21, 4, 20, 28);
     }
 
     @Override
@@ -61,9 +62,7 @@ public class Player extends Entity {
             xSpeed = speed;
         }
 
-        if (Collision.canMoveHere(hitbox.x+xSpeed,hitbox.y+ySpeed,hitbox.width,hitbox.height,lvlData)){
-            hitbox.x += xSpeed;
-            hitbox.y += ySpeed;
+        if (attemptMove(xSpeed,ySpeed)) {
             changeMovementState("RUNNING");
         }
     }
@@ -73,4 +72,6 @@ public class Player extends Entity {
             changeEventState("ATTACKING");
         }
     }
+
+
 }
