@@ -1,14 +1,18 @@
 package rpg.input;
 
+import rpg.objects.Player;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 public class Mouse implements MouseListener, MouseMotionListener {
-    public Mouse(){}
+
+    public Mouse(){
+    }
     @Override
     public void mouseClicked(MouseEvent e) {
-
+        Player.instance.mouseInput(e);
     }
 
     @Override
@@ -18,7 +22,6 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
     }
 
     @Override
@@ -39,4 +42,5 @@ public class Mouse implements MouseListener, MouseMotionListener {
     @Override
     public void mouseMoved(MouseEvent e) {
     }
+
 }

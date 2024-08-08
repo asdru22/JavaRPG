@@ -1,16 +1,17 @@
 package rpg.objects;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class Entity extends Drawable {
     protected AnimationHandler animationHandler;
     protected Direction direction = Direction.RIGHT;
-    protected State state = State.IDLE;
-    private State previous = state;
+    protected String movementState = "IDLE";
+    protected String eventState = "NONE";
 
-    public Entity(int x, int y, int width, int height,String path) {
+    public Entity(int x, int y, int width, int height, String path) {
         super(x, y, width, height);
-        animationHandler = new AnimationHandler(this,path);
+        animationHandler = new AnimationHandler(this, path);
         this.loadAnimations();
         this.animationHandler.initialize();
     }
@@ -20,15 +21,22 @@ public class Entity extends Drawable {
 
     @Override
     public void draw(Graphics g) {
-        if(state!=previous) changedState();
         animationHandler.tick();
+
         g.drawImage(texture, x, y, width * SCALE, height * SCALE, null);
     }
-    public void update(){}
 
-    private void changedState(){
-        previous = state;
-        animationHandler.reset();
+    public void update() {
     }
 
+    public void changeEventState(String newEventState) {
+        if (Objects.equals(eventState, newEventState)) return;
+        eventState = newEventState;
+        animationHandler.changeAnimation();
+    }
+    public void changeMovementState(String newMovementState) {
+        if (Objects.equals(movementState, newMovementState)) return;
+        movementState = newMovementState;
+        animationHandler.changeAnimation();
+    }
 }
