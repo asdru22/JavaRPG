@@ -6,8 +6,7 @@ public class Player extends Entity {
     private int speed = 4;
 
     public Player(int x, int y) {
-        super(x, y, 64, 40);
-        this.loadAnimations();
+        super(x, y, 64, 40,"player.png");
     }
 
     @Override
@@ -23,7 +22,7 @@ public class Player extends Entity {
         animationHandler.add(State.ATTACKING2,10,3,7);
         animationHandler.add(State.ATTACKING3,10,3,8);
 
-        texture = animationHandler.getDefault();
+        animationHandler.initialize();
     }
 
     @Override

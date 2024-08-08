@@ -10,7 +10,7 @@ public class AnimationHandler {
     private Map<State, Animation> animations = new HashMap<>();
     private int index = 0, timer = 0;
     private final Entity entity;
-    private final BufferedImage textureSheet;
+    private BufferedImage textureSheet;
     public AnimationHandler(Entity e,String path){
         this.entity = e;
         textureSheet = Textures.getImage(path);
@@ -42,7 +42,8 @@ public class AnimationHandler {
         entity.texture = get(entity.state).frames[0];
     }
 
-    public BufferedImage getDefault(){
-        return animations.get(State.IDLE).frames[0];
+    public void initialize(){
+        textureSheet = null;
+        entity.texture = animations.get(State.IDLE).frames[0];
     }
 }

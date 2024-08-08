@@ -8,9 +8,11 @@ public class Entity extends Drawable {
     protected State state = State.IDLE;
     private State previous = state;
 
-    public Entity(int x, int y, int width, int height) {
+    public Entity(int x, int y, int width, int height,String path) {
         super(x, y, width, height);
-        animationHandler = new AnimationHandler(this,"player.png");
+        animationHandler = new AnimationHandler(this,path);
+        this.loadAnimations();
+        this.animationHandler.initialize();
     }
 
     public void loadAnimations() {
