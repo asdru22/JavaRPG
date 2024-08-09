@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class Keyboard implements KeyListener {
     public static Keyboard instance;
-    public boolean up,down,left,right;
+    public boolean up,down,left,right, space;
     public Keyboard(){
         instance = this;
     }
@@ -21,6 +21,8 @@ public class Keyboard implements KeyListener {
             case KeyEvent.VK_A -> left = true;
             case KeyEvent.VK_S -> down = true;
             case KeyEvent.VK_D -> right = true;
+            case KeyEvent.VK_SPACE -> space = true;
+
         }
     }
 
@@ -31,9 +33,11 @@ public class Keyboard implements KeyListener {
             case KeyEvent.VK_A -> left = false;
             case KeyEvent.VK_S -> down = false;
             case KeyEvent.VK_D -> right = false;
+            case KeyEvent.VK_SPACE -> space = false;
+
         }
     }
     public boolean any(){
-        return up || down || left || right;
+        return up || down || left || right || space;
     }
 }

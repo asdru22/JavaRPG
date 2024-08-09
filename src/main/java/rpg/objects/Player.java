@@ -2,17 +2,16 @@ package rpg.objects;
 
 import rpg.game.Game;
 import rpg.input.Keyboard;
-import rpg.utils.Collision;
 
 import java.awt.event.MouseEvent;
 
 public class Player extends Entity {
-    private int speed = 2;
 
     public static Player instance;
 
     public Player(int x, int y) {
-        super((int) (x * Game.SCALE), (int) (y * Game.SCALE), 64, 40, "player.png");
+        super((int) (x * Game.SCALE), (int) (y * Game.SCALE), 64, 40,
+                "player.png", 2, -4);
 
         instance = this;
         this.initHitbox(21, 4, 20, 28);
@@ -38,32 +37,64 @@ public class Player extends Entity {
 
     private void updatePosition() {
         Keyboard k = Keyboard.instance;
+
+        // Change to IDLE if no keys are pressed
         if (!k.any()) {
             changeMovementState("IDLE");
-            return;
         }
 
-        int xSpeed = 0, ySpeed = 0;
+        // Determine horizontal movement
+        int xSpeed = 0;
 
-        if (k.up) {
-            direction = Direction.UP;
-            ySpeed = -speed;
-        }
-        if (k.down) {
-            direction = Direction.DOWN;
-            ySpeed = speed;
-        }
         if (k.left) {
             direction = Direction.LEFT;
-            xSpeed = -speed;
+            xSpeed -= speed;
         }
         if (k.right) {
             direction = Direction.RIGHT;
-            xSpeed = speed;
+            xSpeed += speed;
         }
 
-        if (attemptMove(xSpeed,ySpeed)) {
-            changeMovementState("RUNNING");
+        // Jump if space is pressed
+        if (k.space) jump();
+
+        // Apply gravity if in the air
+        if (inAir) {
+            airSpeed += gravity;
+        } else if(!this.onGround()) {
+            inAir = true;
+        }
+
+        // Attempt to move the player
+        if (attemptMove(xSpeed, (int) airSpeed)) {
+            System.out.println("YSpD "+airSpeed);
+            System.out.println("Xspd "+xSpeed);
+
+            if (!inAir) {
+                changeMovementState("RUNNING");
+            }
+        } else if (inAir) {
+            System.out.println("Hit wall");
+            // Handle collision while in the air
+            if (airSpeed > 0) { // Collided while falling
+                System.out.println("collided when falling");
+                inAir = false;
+                airSpeed = 0;
+            } else { // Collided while jumping upwards
+                airSpeed = fallSpeedAfterCollision; // Adjust this to make the fall smoother
+                System.out.println("collided when jumping");
+
+            }
+        }
+    }
+
+    private void jump() {
+        System.out.println("pressed psace");
+        if (!inAir) {
+            inAir = true;
+            airSpeed = jumpSpeed;
+            changeMovementState("JUMPING");
+
         }
     }
 

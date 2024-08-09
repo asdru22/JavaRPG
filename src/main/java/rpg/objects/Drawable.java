@@ -6,10 +6,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Drawable {
-    protected int x, y, width, height;
+    protected float x, y;
+    protected int width, height;
     public BufferedImage texture;
 
-    public Drawable(int x, int y, int width, int height) {
+    public Drawable(float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -17,6 +18,6 @@ public class Drawable {
     }
 
     public void draw(Graphics g) {
-        g.drawImage(texture, x, y, (int) (width * Game.SCALE), (int) (height * Game.SCALE), null);
+        g.drawImage(texture, (int) x, (int) y, (int) (width * Game.SCALE), (int) (height * Game.SCALE), null);
     }
 }

@@ -6,6 +6,7 @@ import rpg.level.LevelManager;
 import rpg.utils.Collision;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.Objects;
 
 public class Entity extends Drawable {
@@ -13,16 +14,25 @@ public class Entity extends Drawable {
     protected Direction direction = Direction.RIGHT;
     protected String movementState = "IDLE";
     protected String eventState = "NONE";
-    protected Rectangle hitbox;
+    protected Rectangle2D.Float hitbox;
     protected int[][] lvlData;
-    protected int xDrawOffset, yDrawOffset, drawWidth, drawHeight;
+    protected float xDrawOffset, yDrawOffset, drawWidth, drawHeight;
 
-    public Entity(int x, int y, int width, int height, String path) {
+    // Jumping/gravity
+    protected double airSpeed = 0, gravity = (0.04 * Game.SCALE), fallSpeedAfterCollision = 1.4 * Game.SCALE;
+    protected int speed, jumpSpeed;
+    protected boolean inAir = false;
+
+
+    public Entity(float x, float y, int width, int height, String path, int speed, double jumpSpeed) {
         super(x, y, width, height);
         animationHandler = new AnimationHandler(this, path);
         this.loadAnimations();
         this.animationHandler.initialize();
         this.lvlData = LevelManager.instance.getCurrentLevel().getLvlData();
+        this.speed = (int) (speed * Game.SCALE);
+        this.jumpSpeed = (int) (jumpSpeed * Game.SCALE);
+
     }
 
     protected void initHitbox(int xOffset, int yOffset, int newWidth, int newHeight) {
@@ -30,16 +40,16 @@ public class Entity extends Drawable {
         yDrawOffset = (int) (yOffset * Game.SCALE);
         drawWidth = (int) (newWidth * Game.SCALE);
         drawHeight = (int) (newHeight * Game.SCALE);
-        hitbox = new Rectangle(x, y, drawWidth, drawHeight);
+        hitbox = new Rectangle2D.Float(x, y, drawWidth, drawHeight);
     }
 
-    public Rectangle getHitbox() {
+    public Rectangle2D.Float getHitbox() {
         return hitbox;
     }
 
     protected void drawHitbox(Graphics g) {
         g.setColor(Color.RED);
-        g.drawRect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        g.drawRect((int) hitbox.x, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
     }
 
     public void loadAnimations() {
@@ -49,7 +59,7 @@ public class Entity extends Drawable {
     public void draw(Graphics g) {
         animationHandler.tick();
         drawHitbox(g);
-        g.drawImage(texture, hitbox.x - xDrawOffset, hitbox.y - yDrawOffset, width, height, null);
+        g.drawImage(texture, (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), width, height, null);
     }
 
     public void update() {
@@ -67,13 +77,13 @@ public class Entity extends Drawable {
         animationHandler.changeAnimation();
     }
 
-    public boolean attemptMove(int xSpeed, int ySpeed) {
-        int finalX = hitbox.x;
-        int finalY = hitbox.y;
+    public boolean attemptMove(float xSpeed, float ySpeed) {
+        float finalX = hitbox.x;
+        float finalY = hitbox.y;
 
         // Attempt to move horizontally
         while (xSpeed != 0) {
-            int newX = finalX + xSpeed;
+            float newX = finalX + xSpeed;
 
             boolean canMoveHorizontally = !(Collision.isSolid(newX + hitbox.width, finalY + hitbox.height, lvlData) ||
                     Collision.isSolid(newX, finalY + hitbox.height, lvlData) ||
@@ -91,7 +101,7 @@ public class Entity extends Drawable {
 
         // Attempt to move vertically
         while (ySpeed != 0) {
-            int newY = finalY + ySpeed;
+            float newY = finalY + ySpeed;
 
             boolean canMoveVertically = !(Collision.isSolid(finalX + hitbox.width, newY + hitbox.height, lvlData) ||
                     Collision.isSolid(finalX, newY + hitbox.height, lvlData) ||
@@ -103,7 +113,7 @@ public class Entity extends Drawable {
                 break;
             } else {
                 // Reduce speed until it reaches 0
-                ySpeed = (ySpeed > 0) ? ySpeed - 1 : ySpeed + 1;
+                ySpeed = (ySpeed > 0) ? ySpeed - 0.1f : ySpeed + 0.1f;
             }
         }
 
@@ -111,11 +121,17 @@ public class Entity extends Drawable {
         if (finalX != hitbox.x || finalY != hitbox.y) {
             hitbox.x = finalX;
             hitbox.y = finalY;
-            changeMovementState("RUNNING");
             return true;
         }
 
         // No movement occurred
         return false;
+    }
+
+    protected boolean onGround() {
+        if (!Collision.isSolid(hitbox.x, hitbox.y + hitbox.height+1, lvlData)) {
+            if (!Collision.isSolid(hitbox.x + hitbox.width, hitbox.y + hitbox.height+1, lvlData)) return false;
+        }
+        return true;
     }
 }
